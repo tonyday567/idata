@@ -244,3 +244,22 @@ ghc-pkg --package-db=$HOME/.cabal/store/ghc-9.6.7/package.db list | wc -l
 #+begin_src sh :results output
 ghc-pkg --package-db=$HOME/.cabal/store/ghc-9.6.7/package.db list | wc -l
 #+end_src
+
+
+
+* ToDo ihaskell install
+
+Cabal
+Assuming you have jupyter already installed.
+
+Steps
+git clone https://github.com/IHaskell/IHaskell
+cd IHaskell
+cabal build && cabal install exe:ihaskell --package-env local.env --overwrite-policy=always --force-reinstalls --installdir=/home/$USER/.cabal/bin/ --install-method=copy
+ihaskell install --env-file=local.env --ghclib=$(ghc --print-libdir) --prefix=$HOME/local/
+sudo jupyter kernelspec install $HOME/local/share/jupyter/kernels/haskell/
+
+Issues
+
+This is how you add the list of extra packages:
+cabal install --lib Cabal --package-env local.env
