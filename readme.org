@@ -1,265 +1,173 @@
-* idata
-
-
-* ihaskell install
-
-
-OSX from scratch:
-
-
-** python
+* ihaskell MacOS install
+** line method
 
 #+begin_src sh :results output
-brew install python
-brew install pipx
-pipx install notebook
-#+end_src
-
-Add to path:
-
-#+begin_src sh :results output
-/Users/tonyday567/.local/pipx/venvs/notebook
-#+end_src
-
-** ihaskell
-
-#+begin_src sh :results output
-brew install zeromq libmagic cairo pkg-config pango
-git clone https://github.com/IHaskell/IHaskell
-cd IHaskell
-cabal clean && cabal build all && cabal install
-#+end_src
-
-
-** jupyter
-
-run on a project recompile?
-
-#+begin_src sh :results output
-ihaskell install --env-file=.ghc.environment.aarch64-darwin-9.6.7
-#+end_src
-
-
-
-
-* ihaskell-cabal build
-
-#+begin_src sh :results output
-git clone https://github.com/IHaskell/IHaskell
-cd IHaskell
-cabal build && cabal install exe:ihaskell --package-env local.env --overwrite-policy=always --force-reinstalls --install-method=copy
-ihaskell install --env-file=local.env --ghclib=$(ghc --print-libdir) --prefix=$HOME/local/
-sudo jupyter kernelspec install $HOME/local/share/jupyter/kernels/haskell/
-#+end_src
-
-** cabal env
-
-https://github.com/haskell/cabal/issues/6481
-
-https://hackage.haskell.org/package/build-env
-
-https://blog.ielliott.io/playing-with-ghc-package-databases
-
-
-
-* cabal environment
-
-
-#+begin_src sh :results output
-cabal exec -- printenv GHC_ENVIRONMENT
-#+end_src
-
-#+RESULTS:
-: /Users/tonyday567/haskell/idata/dist-newstyle/tmp/environment.-83171/.ghc.environment.aarch64-darwin-9.6.7
-
-
-#+begin_src sh :results output
-cabal exec -- bash -c 'cat $(printenv GHC_ENVIRONMENT) | head -n 20'
-#+end_src
-
-#+RESULTS:
-#+begin_example
--- This is a GHC environment file written by cabal. This means you can
--- run ghc or ghci and get the environment of the project as a whole.
--- But you still need to use cabal repl $target to get the environment
--- of specific components (libs, exes, tests etc) because each one can
--- have its own source dirs, cpp flags etc.
---
-clear-package-db
-global-package-db
-package-db /Users/tonyday567/.cabal/store/ghc-9.6.7/package.db
-package-db /Users/tonyday567/haskell/idata/dist-newstyle/packagedb/ghc-9.6.7
-package-id idata-0.1.0.0-inplace
-package-id base-4.18.3.0
-package-id ghc-bignum-1.3
-package-id ghc-prim-0.10.0
-package-id rts-1.0.2
-package-id chrt-svg-0.8.2.1-091fbd55
-package-id Clr-0.4.1-965bbd84
-package-id dt-dflt-clss-0.2.0.0-18710238
-package-id dt-dflt-0.8.0.1-b9be2f67
-package-id containers-0.6.7
-#+end_example
-
-
-#+begin_src sh :results output
-cat * idata
-
-
-* ihaskell install
-
-
-OSX from scratch:
-
-
-** python
-
-#+begin_src sh :results output
-brew install python
-brew install pipx
-pipx install notebook
-#+end_src
-
-Add to path:
-
-#+begin_src sh :results output
-/Users/tonyday567/.local/pipx/venvs/notebook
-#+end_src
-
-** ihaskell
-
-#+begin_src sh :results output
-brew install zeromq libmagic cairo pkg-config pango
-git clone https://github.com/IHaskell/IHaskell
-cd IHaskell
-cabal clean && cabal build all && cabal install
-#+end_src
-
-
-** jupyter
-
-run on a project recompile?
-
-#+begin_src sh :results output
-ihaskell install --env-file=.ghc.environment.aarch64-darwin-9.6.7
-#+end_src
-
-
-
-
-* ihaskell-cabal build
-
-#+begin_src sh :results output
-git clone https://github.com/IHaskell/IHaskell
-cd IHaskell
-cabal build && cabal install exe:ihaskell --package-env local.env --overwrite-policy=always --force-reinstalls --install-method=copy
-ihaskell install --env-file=local.env --ghclib=$(ghc --print-libdir) --prefix=$HOME/local/
-sudo jupyter kernelspec install $HOME/local/share/jupyter/kernels/haskell/
-#+end_src
-
-** cabal env
-
-https://github.com/haskell/cabal/issues/6481
-
-https://hackage.haskell.org/package/build-env
-
-https://blog.ielliott.io/playing-with-ghc-package-databases
-
-
-
-* cabal environment
-
-
-#+begin_src sh :results output
-cabal exec -- printenv GHC_ENVIRONMENT
-#+end_src
-
-#+RESULTS:
-: /Users/tonyday567/haskell/idata/dist-newstyle/tmp/environment.-83171/.ghc.environment.aarch64-darwin-9.6.7
-
-
-#+begin_src sh :results output
-cabal exec -- bash -c 'cat $(printenv GHC_ENVIRONMENT) | head -n 20'
-#+end_src
-
-#+RESULTS:
-#+begin_example
--- This is a GHC environment file written by cabal. This means you can
--- run ghc or ghci and get the environment of the project as a whole.
--- But you still need to use cabal repl $target to get the environment
--- of specific components (libs, exes, tests etc) because each one can
--- have its own source dirs, cpp flags etc.
---
-clear-package-db
-global-package-db
-package-db /Users/tonyday567/.cabal/store/ghc-9.6.7/package.db
-package-db /Users/tonyday567/haskell/idata/dist-newstyle/packagedb/ghc-9.6.7
-package-id idata-0.1.0.0-inplace
-package-id base-4.18.3.0
-package-id ghc-bignum-1.3
-package-id ghc-prim-0.10.0
-package-id rts-1.0.2
-package-id chrt-svg-0.8.2.1-091fbd55
-package-id Clr-0.4.1-965bbd84
-package-id dt-dflt-clss-0.2.0.0-18710238
-package-id dt-dflt-0.8.0.1-b9be2f67
-package-id containers-0.6.7
-#+end_example
-
-#+begin_src sh :results output
-cat .ghc.environment.aarch64-darwin-9.6.7 | head -n 20
-#+end_src
-
-#+RESULTS:
-#+begin_example
--- This is a GHC environment file written by cabal. This means you can
--- run ghc or ghci and get the environment of the project as a whole.
--- But you still need to use cabal repl $target to get the environment
--- of specific components (libs, exes, tests etc) because each one can
--- have its own source dirs, cpp flags etc.
---
-clear-package-db
-global-package-db
-package-db /Users/tonyday567/.cabal/store/ghc-9.6.7/package.db
-package-db dist-newstyle/packagedb/ghc-9.6.7
-package-id idata-0.1.0.0-inplace
-package-id base-4.18.3.0
-package-id ghc-bignum-1.3
-package-id ghc-prim-0.10.0
-package-id rts-1.0.2
-package-id chrt-svg-0.8.2.1-091fbd55
-package-id Clr-0.4.1-965bbd84
-package-id dt-dflt-clss-0.2.0.0-18710238
-package-id dt-dflt-0.8.0.1-b9be2f67
-package-id containers-0.6.7
-#+end_example
-
-#+begin_src sh :results output
-ghc-pkg --package-db=$HOME/.cabal/store/ghc-9.6.7/package.db list | wc -l
-#+end_src
-
-#+RESULTS:
-:      301
-
-#+begin_src sh :results output
-ghc-pkg --package-db=$HOME/.cabal/store/ghc-9.6.7/package.db list | wc -l
-#+end_src
-
-
-
-* ToDo ihaskell install
-
-Cabal
-Assuming you have jupyter already installed.
-
-Steps
 git clone https://github.com/IHaskell/IHaskell
 cd IHaskell
 cabal build && cabal install exe:ihaskell --package-env local.env --overwrite-policy=always --force-reinstalls --installdir=/home/$USER/.cabal/bin/ --install-method=copy
 ihaskell install --env-file=local.env --ghclib=$(ghc --print-libdir) --prefix=$HOME/local/
 sudo jupyter kernelspec install $HOME/local/share/jupyter/kernels/haskell/
+#+end_src
 
-Issues
+Following this recipe I eventually arrive at the following in the jupyter console log, when I switch to the haskell kernel:
 
-This is how you add the list of extra packages:
-cabal install --lib Cabal --package-env local.env
+#+begin_src sh
+ihaskell: internal error: Relocation target for PAGE21 out of range.
+    (GHC version 9.10.3 for aarch64_apple_darwin)
+    Please report this as a GHC bug:  https://www.haskell.org/ghc/reportabug
+#+end_src
+
+Which is a (the) known bug in ihaskell MacOS.
+
+https://gitlab.haskell.org/ghc/ghc/-/issues/25572
+
+https://github.com/IHaskell/IHaskell/issues/1543
+
+Reading through the notes I would suggest that ghc & ihaskell do not support MacOS and will not in the foreseeable future.
+
+Minor stuff:
+
+- i also tried `cabal install ihaskell --package-env local.env --install-method=copy` which produced the same ihaskell as the original recipe, so I think that's a bit simpler than downloading a repo.
+- I used `ihaskell install --env-file local.env` The other args looked like defaults. MacOS default is the artifact is created in `$(jupyter --data-dir)/kernels/haskell`. This spot is picked up immediately by `jupyter kernelspec list`
+
+- so, I didn't do the `jupyter kernelspec install`. If you do do it, the sudo sends the kernel to /usr/local/share or something, which is a weird thing to do on Mac.
+
+
+** library method
+
+#+begin_src sh :results output
+#!/bin/zsh
+
+error () { echo "error: $@"; exit 1}
+
+if [ "$#" -ge "1" ]; then
+    WORKDIR="$(realpath $1)"
+    if [ -d "$WORKDIR" ]; then
+        error "directory already exists"
+    fi
+    else
+    error "1st arg should be the name of the directory where to set up the environment"
+fi
+
+if ! command -v jupyter >/dev/null 2>&1; then
+    error "run this in an environment where jupyter is installed";
+fi
+
+WORKDIR=xyzzy
+echo $WORKDIR
+cabal init  --non-interactive $WORKDIR -d "base,ihaskell"
+cd $WORKDIR
+cabal build --write-ghc-environment-files=always
+local ghc_env_path="$(ls | grep -i ".ghc.environment")"
+local haskell_kernel_dir="$(jupyter --data-dir)/kernels/haskell/"
+mkdir -p $haskell_kernel_dir
+cat > $haskell_kernel_dir/kernel.json << EOF
+{
+  "argv": [
+    "cabal","exec", "--project-dir","$WORKDIR", "ihaskell",
+    "kernel",
+    "{connection_file}", "+RTS","-M3g","-N2", "-RTS"
+  ],
+  "display_name": "Haskell",
+  "language": "haskell",
+  "env": {
+    "GHC_ENVIRONMENT": "$ghc_env_path"
+  }
+}
+EOF
+#+end_src
+
+Exact steps led to cabal exec not finding an ihaskell executable.
+
+I don't think this recipe includes building the ihaskell executable. cabal build builds ihaskell-0.13.0.0 the library but not the exec. cabal exec ihaskell cant find an ihaskell executable.
+
+Adding in a `cabal install ihaskell` step resulted in the same PAGE21 bug.
+
+* MacOS install notes
+
+** python
+
+python (and ihaskell library additions)
+
+#+begin_src sh :results output
+brew install python
+brew install pipx
+pipx install notebook
+brew install zeromq libmagic cairo pkg-config pango
+#+end_src
+
+Add to path:
+
+#+begin_src sh :results output
+/Users/tonyday567/.local/pipx/venvs/notebook
+#+end_src
+
+* kernels
+
+line method
+
+#+begin_src sh :results output
+{"argv":["/Users/tonyday567/.cabal/bin/ihaskell","kernel","{connection_file}","--ghclib","/Users/tonyday567/.ghcup/ghc/9.10.3/lib/ghc-9.10.3/lib","+RTS","-M3g","-N2","-RTS"],"display_name":"Haskell","language":"haskell"}
+#+end_src
+
+library method
+
+#+begin_src sh :results output
+{
+  "argv": [
+    "cabal","exec", "--project-dir","/Users/tonyday567/haskell/xyzzy", "ihaskell",
+    "kernel",
+    "{connection_file}", "+RTS","-M3g","-N2", "-RTS"
+  ],
+  "display_name": "Haskell",
+  "language": "haskell",
+  "env": {
+    "GHC_ENVIRONMENT": ".ghc.environment.aarch64-darwin-9.10.3"
+  }
+}
+#+end_src
+
+* cabal environment
+
+refs
+
+https://github.com/haskell/cabal/issues/6481
+
+https://hackage.haskell.org/package/build-env
+
+https://blog.ielliott.io/playing-with-ghc-package-databases
+
+#+begin_src sh :results output
+cabal exec -- printenv GHC_ENVIRONMENT
+#+end_src
+
+#+RESULTS:
+: Resolving dependencies...
+
+#+begin_src sh :results output
+cabal exec -- bash -c 'cat $(printenv GHC_ENVIRONMENT) | head -n 20'
+#+end_src
+
+#+RESULTS:
+#+begin_example
+-- This is a GHC environment file written by cabal. This means you can
+-- run ghc or ghci and get the environment of the project as a whole.
+-- But you still need to use cabal repl $target to get the environment
+-- of specific components (libs, exes, tests etc) because each one can
+-- have its own source dirs, cpp flags etc.
+--
+clear-package-db
+global-package-db
+package-db /Users/tonyday567/.cabal/store/ghc-9.6.7/package.db
+package-db /Users/tonyday567/haskell/idata/dist-newstyle/packagedb/ghc-9.6.7
+package-id idata-0.1.0.0-inplace
+package-id base-4.18.3.0
+package-id ghc-bignum-1.3
+package-id ghc-prim-0.10.0
+package-id rts-1.0.2
+package-id chrt-svg-0.8.2.1-091fbd55
+package-id Clr-0.4.1-965bbd84
+package-id dt-dflt-clss-0.2.0.0-18710238
+package-id dt-dflt-0.8.0.1-b9be2f67
+package-id containers-0.6.7
+#+end_example
