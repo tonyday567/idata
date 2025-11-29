@@ -1,0 +1,234 @@
+
+# shout out
+
+Hi everyone. I&rsquo;m in the process of refactoring some libraries to target MicroHs (mhs). For users of these libraries unfortunately a decision has been made and it’s going to happen. Fortunately, targeting mhs means continuing with using the ghc for most bits and bobs, so there will be hopefully little disruption.
+
+Libraries
+
+For those of you who are not familiar with my library set, I maintain (I won’t link them to avoid too much promotion):
+
+numhask - numerical classes we all might have enjoyed using if we could change base. Alternatively, this is what the basics of numpy would look like in Haskell.
+
+harpie - an n-dimensional array library with a mirrored array shape api at the value and type levels. The API owes a debt to uiua.org and is developed off of their API research.
+
+chart-svg - a chart library targetting svg and my homage to the glories of haddock. A chart library should strut!
+
+box - my “it’s not an effect system, it’s a profunctor” effects system. I have never known why it works as well as it does, but have just found a hyperfunction buried in the code base!
+
+mealy - my badly named incremental statistics state-machine. Fast and composable as it gets.
+
+perf - a performance library that is not criterion.
+
+A keen eye will note that many of these elements would be key pieces of an ML pipeline, and you would be right. They pretty much all began in the initial dataHaskell project and are being spruced up for the relaunched efforts.
+
+Call for participation
+
+This is a big library set, and I will get through it somehow, but it could also be a great opportunity for some community effort.
+
+Reasons to get involved:
+
+1.  You are new to Haskell
+
+These libraries are non-commercial and by that I mean they are driven by craft considerations above anything else. They are educational to a large extent, and, at their best, I think promote good coding practices and demonstrate what Haskell can do in a very concrete way.
+
+I&rsquo;ve started a tight compiler-development loop working on numhask as an initial point of entry, logging mhs errors into the readme.md of the branch: <https://github.com/tonyday567/numhask/tree/mhs>
+
+If you glance through you see a log of every compiler error roughly matching commits. They are, so far, plain and crystal clear. They have to be because there&rsquo;s no looking up a solution, or, at least, no AI training set yet. There is no haddock for the base even, so you need to hunt for analagous functions in mhs base and check back with ghc hq.
+
+So the job doesn&rsquo;t require deep Haskell experience, but it&rsquo;s not boring, you&rsquo;re not at much of a disadvantage, and it&rsquo;s a strong path to learning the full toolkit.
+
+1.  You are new to data science
+
+The pipeline forming around the dataHaskell activity is a fantastic context within which to learn machine learning (that&rsquo;s what I&rsquo;m doing mainly). You get a view from the inside of an ML pipeline being rapidly developed, still in incubation, needing user input, but committed to exclusively using Haskell idioms and artifacts.
+
+For an example of this kind of activity, and how new it all is, <https://github.com/tonyday567/mdata> is a log of designing box and whisker charts for dataframe. It will soon be an entire dashboard for incoming csv data covering real and classification visualisations. Next up is a pie chart, and a pie chart, a really good pie chart with an ability to scale and offset pie slices is a fun project.
+
+1.  Haskell Pride
+
+One of my personal motivations is to be part of a Kaggle winning team that uses and showcases well-crafted, Haskell-built tools. But in the ten years that a haskell engine has been available a Haskell team has never won: the trophy cabinet bare. Firstly, we could win if we tried and kept our wits, huzza! If not, we can create a strong feedback loop and work with a core infrastructure piece needed to break into data science. You can just do it for Haskell pride.
+
+Whatever the reasons, I would love to collaborate. Please say hi in the [dataHaskell](https://www.datahaskell.org/blog.html) discord, or just start putting issues up and saying hi in any library or project that catches your eye.
+
+go team!
+
+
+# ihaskell MacOS install
+
+
+## line method
+
+    git clone https://github.com/IHaskell/IHaskell
+    cd IHaskell
+    cabal build && cabal install exe:ihaskell --package-env local.env --overwrite-policy=always --force-reinstalls --installdir=/home/$USER/.cabal/bin/ --install-method=copy
+    ihaskell install --env-file=local.env --ghclib=$(ghc --print-libdir) --prefix=$HOME/local/
+    sudo jupyter kernelspec install $HOME/local/share/jupyter/kernels/haskell/
+
+Following this recipe I eventually arrive at the following in the jupyter console log, when I switch to the haskell kernel:
+
+    ihaskell: internal error: Relocation target for PAGE21 out of range.
+        (GHC version 9.10.3 for aarch64_apple_darwin)
+        Please report this as a GHC bug:  https://www.haskell.org/ghc/reportabug
+
+Which is a (the) known bug in ihaskell MacOS.
+
+<https://gitlab.haskell.org/ghc/ghc/-/issues/25572>
+
+<https://github.com/IHaskell/IHaskell/issues/1543>
+
+Reading through the notes I would suggest that ghc & ihaskell do not support MacOS and will not in the foreseeable future.
+
+Minor stuff:
+
+-   i also tried \`cabal install ihaskell &#x2013;package-env local.env &#x2013;install-method=copy\` which produced the same ihaskell as the original recipe, so I think that&rsquo;s a bit simpler than downloading a repo.
+-   I used \`ihaskell install &#x2013;env-file local.env\` The other args looked like defaults. MacOS default is the artifact is created in \`$(jupyter &#x2013;data-dir)/kernels/haskell\`. This spot is picked up immediately by \`jupyter kernelspec list\`
+
+-   so, I didn&rsquo;t do the \`jupyter kernelspec install\`. If you do do it, the sudo sends the kernel to /usr/local/share or something, which is a weird thing to do on Mac.
+
+
+## library method
+
+    #!/bin/zsh
+    
+    error () { echo "error: $@"; exit 1}
+    
+    if [ "$#" -ge "1" ]; then
+        WORKDIR="$(realpath $1)"
+        if [ -d "$WORKDIR" ]; then
+            error "directory already exists"
+        fi
+        else
+        error "1st arg should be the name of the directory where to set up the environment"
+    fi
+    
+    if ! command -v jupyter >/dev/null 2>&1; then
+        error "run this in an environment where jupyter is installed";
+    fi
+    
+    WORKDIR=xyzzy
+    echo $WORKDIR
+    cabal init  --non-interactive $WORKDIR -d "base,ihaskell"
+    cd $WORKDIR
+    cabal build --write-ghc-environment-files=always
+    local ghc_env_path="$(ls | grep -i ".ghc.environment")"
+    local haskell_kernel_dir="$(jupyter --data-dir)/kernels/haskell/"
+    mkdir -p $haskell_kernel_dir
+    cat > $haskell_kernel_dir/kernel.json << EOF
+    {
+      "argv": [
+        "cabal","exec", "--project-dir","$WORKDIR", "ihaskell",
+        "kernel",
+        "{connection_file}", "+RTS","-M3g","-N2", "-RTS"
+      ],
+      "display_name": "Haskell",
+      "language": "haskell",
+      "env": {
+        "GHC_ENVIRONMENT": "$ghc_env_path"
+      }
+    }
+    EOF
+
+Exact steps led to cabal exec not finding an ihaskell executable.
+
+I don&rsquo;t think this recipe includes building the ihaskell executable. cabal build builds ihaskell-0.13.0.0 the library but not the exec. cabal exec ihaskell cant find an ihaskell executable.
+
+Adding in a \`cabal install ihaskell\` step resulted in the same PAGE21 bug.
+
+
+# MacOS install notes
+
+
+## python
+
+python (and ihaskell library additions)
+
+    brew install python
+    brew install pipx
+    pipx install notebook
+    brew install zeromq libmagic cairo pkg-config pango
+
+Add to path:
+
+    /Users/tonyday567/.local/pipx/venvs/notebook
+
+
+# kernels
+
+line method
+
+    {"argv":["/Users/tonyday567/.cabal/bin/ihaskell","kernel","{connection_file}","--ghclib","/Users/tonyday567/.ghcup/ghc/9.10.3/lib/ghc-9.10.3/lib","+RTS","-M3g","-N2","-RTS"],"display_name":"Haskell","language":"haskell"}
+
+library method
+
+    {
+      "argv": [
+        "cabal","exec", "--project-dir","/Users/tonyday567/haskell/xyzzy", "ihaskell",
+        "kernel",
+        "{connection_file}", "+RTS","-M3g","-N2", "-RTS"
+      ],
+      "display_name": "Haskell",
+      "language": "haskell",
+      "env": {
+        "GHC_ENVIRONMENT": ".ghc.environment.aarch64-darwin-9.10.3"
+      }
+    }
+
+
+# cabal environment
+
+refs
+
+<https://github.com/haskell/cabal/issues/6481>
+
+<https://hackage.haskell.org/package/build-env>
+
+<https://blog.ielliott.io/playing-with-ghc-package-databases>
+
+    cabal exec -- printenv GHC_ENVIRONMENT
+
+    Resolving dependencies...
+
+    cabal exec -- bash -c 'cat $(printenv GHC_ENVIRONMENT) | head -n 20'
+
+    -- This is a GHC environment file written by cabal. This means you can
+    -- run ghc or ghci and get the environment of the project as a whole.
+    -- But you still need to use cabal repl $target to get the environment
+    -- of specific components (libs, exes, tests etc) because each one can
+    -- have its own source dirs, cpp flags etc.
+    --
+    clear-package-db
+    global-package-db
+    package-db /Users/tonyday567/.cabal/store/ghc-9.6.7/package.db
+    package-db /Users/tonyday567/haskell/idata/dist-newstyle/packagedb/ghc-9.6.7
+    package-id idata-0.1.0.0-inplace
+    package-id base-4.18.3.0
+    package-id ghc-bignum-1.3
+    package-id ghc-prim-0.10.0
+    package-id rts-1.0.2
+    package-id chrt-svg-0.8.2.1-091fbd55
+    package-id Clr-0.4.1-965bbd84
+    package-id dt-dflt-clss-0.2.0.0-18710238
+    package-id dt-dflt-0.8.0.1-b9be2f67
+    package-id containers-0.6.7
+
+
+# llvm
+
+<https://minoki.github.io/posts/2025-01-06-ghc-llvm-backend.html>
+
+    echo $(brew --prefix llvm@15)/bin
+
+    /opt/homebrew/opt/llvm@15/bin
+
+env OPT=$(brew --prefix llvm@15)/bin/opt LLC=$(brew &#x2013;prefix llvm@15)/bin/llc LLVMAS=$(brew &#x2013;prefix llvm@15)/bin/clang ghcup install ghc 9.10.3 &#x2013;force
+
+
+# asColumn
+
+class FromColumn t a | t -> a where
+  asColumn :: t -> Column
+  columnAs :: Column -> t
+
+instance FromColumn (Vector a) a where
+  asArray = id
+  arrayAs = id
+
